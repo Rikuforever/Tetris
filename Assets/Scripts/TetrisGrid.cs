@@ -25,7 +25,14 @@ public class TetrisGrid : MonoBehaviour {
         Debug.Log(ValidCheck(playerGrid));
 	}
 
-    //인풋 좌표와 게임 판 하고 겹치는지 확인
+    /// <summary>
+    /// 해당 배치를 게임 판에 적용해도 되는지 여부조사
+    /// <para/>True : 겹치지 않는다
+    /// <para>False : 겹친다</para>
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <returns></returns>
+
     bool ValidCheck(int[,] grid)
     {
         //GetLength(X)로 X차원의 길이를 젤 수 있다.
@@ -40,13 +47,12 @@ public class TetrisGrid : MonoBehaviour {
                 if (grid[y,x] != 0)
                 {
                     Debug.Log("(" + y + "," + x + ")");
-                    //게임 판이 차지하고 있음면 거짓
+                    //게임 판이 칸을 이미 차지하고 있음면 거짓
                     if (baseGrid[y, x] != 0)
                         return false;
-                    //게임 판이 비어있으면 참
+                    //게임 판의 칸이 비어있으면 참
                     else
-                        return true;
-                    
+                        return true;                    
                 }
             }
         }
