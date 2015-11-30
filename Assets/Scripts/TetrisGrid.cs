@@ -8,9 +8,12 @@ public class TetrisGrid : MonoBehaviour {
     public int gridLength;
 
     //게임 전체 판 (글로벌)
+    //{[0,0],[0,1],[0,2],[0,3],
+    //[1,0],[1,1],[1,2],[1,3],
     public int[,] baseGrid;
 
     //플레이어가 컨트롤중인 블록 위치 값
+    //문제가 회전을 하기 위해서는 위치 값뿐만 아니라 중심과 종류 값도 필요하다. Class개념을 배워야하지 않을까?
     private int[,] playerGrid;
 
 	// Use this for initialization
@@ -32,7 +35,6 @@ public class TetrisGrid : MonoBehaviour {
     /// </summary>
     /// <param name="grid"></param>
     /// <returns></returns>
-
     bool ValidCheck(int[,] grid)
     {
         //GetLength(X)로 X차원의 길이를 젤 수 있다.
@@ -58,5 +60,34 @@ public class TetrisGrid : MonoBehaviour {
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 타이머 지나고 난후 그리드 처리
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name=""></param>
+    void TimerNext(int[,] grid)
+    {
+        //플레이어 블록이 더 내려갈 수 있는 여부 확인
+        //플레이어 블록이 맨 아랫줄에 있는가?
+        for(int x = 0; x < gridLength; x += 1)
+        {
+            //있는 경우 플레이어 블록을 게임 블록에 적용하고 새로운 블록을 생성한다.
+            if (grid[(gridHeight-1),x] != 0)
+            {
+                for(int yy = 0; yy < gridHeight; yy += 1)
+                {
+                    for(int xx = 0; xx < gridLength; xx += 1)
+                    {
+                        baseGrid[yy, xx] = baseGrid[yy, xx] + grid[yy, xx];
+                    }
+                }
+                //새로운 블록 생성 함수
+                return;
+            }
+
+        }
+        //맨 아랫줄에 없는 경우, 블록을 한칸 내릴 수 있는지 확인한다.
     }
 }
