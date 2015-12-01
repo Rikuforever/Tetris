@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TetrisGrid : MonoBehaviour {
 
-    //게임 판 높이와 너비
+    //Grid 높이와 너비
     public int gridHeight;
     public int gridLength;
 
