@@ -16,16 +16,22 @@ public class TetrisGrid : MonoBehaviour {
     //문제가 회전을 하기 위해서는 위치 값뿐만 아니라 중심과 종류 값도 필요하다. Class개념을 배워야하지 않을까?
     private int[,] playerGrid;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start() {
         baseGrid = new int[gridHeight, gridLength];
         playerGrid = new int[gridHeight, gridLength];
+        //Debug용_Start
+        //baseGrid = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+        //playerGrid = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 } };
+        //Debug용_End
     }
 	
 	// Update is called once per frame
 	void Update () {
-        ValidCheck(playerGrid);
-        Debug.Log(ValidCheck(playerGrid));
+        Debug.Log(baseGrid[2, 0] + baseGrid[2, 1] + baseGrid[2, 2]);
+        Debug.Log("ValidCheck = " + ValidCheck(playerGrid));
+        TimerNext(playerGrid);
+        Debug.Log(baseGrid[2,0] + baseGrid[2, 1] + baseGrid[2, 2]);
 	}
 
     /// <summary>
@@ -48,7 +54,7 @@ public class TetrisGrid : MonoBehaviour {
                 //인풋 좌표에서 1값이 있는 칸에
                 if (grid[y,x] != 0)
                 {
-                    Debug.Log("(" + y + "," + x + ")");
+                    //Debug.Log("(" + y + "," + x + ")");
                     //게임 판이 칸을 이미 차지하고 있음면 거짓
                     if (baseGrid[y, x] != 0)
                         return false;
@@ -83,11 +89,12 @@ public class TetrisGrid : MonoBehaviour {
                         baseGrid[yy, xx] = baseGrid[yy, xx] + grid[yy, xx];
                     }
                 }
-                //새로운 블록 생성 함수
+                //새로운 블록 생성 함수 (playerGrid 초기화, 새로운 블록 적용)
                 return;
             }
 
         }
         //맨 아랫줄에 없는 경우, 블록을 한칸 내릴 수 있는지 확인한다.
+        return;
     }
 }
