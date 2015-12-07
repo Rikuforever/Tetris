@@ -1,100 +1,47 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TetrisGrid : MonoBehaviour {
+//MonoBehavior에서 제공하는 함수 등이 필요 없기 때문에 제거
+public class TetrisGrid {
 
-    //Grid 높이와 너비
+    //Int
     public int gridHeight;
     public int gridLength;
+    private int _blockTurnState;
+    private int _color;
 
-    //게임 전체 판 (글로벌)
-    //{[0,0],[0,1],[0,2],[0,3],
-    //[1,0],[1,1],[1,2],[1,3],
-    public int[,] baseGrid;
+    //Array int
+    public int[,] grid;
+    private int[] _pivot;
 
-    //플레이어가 컨트롤중인 블록 위치 값
-    //문제가 회전을 하기 위해서는 위치 값뿐만 아니라 중심과 종류 값도 필요하다. Class개념을 배워야하지 않을까?
-    private int[,] playerGrid;
+    //Enum
+    private enum _blockType { Main, I, J, L, S, Z, T, O}
 
-    // Use this for initialization
-    void Start() {
-        baseGrid = new int[gridHeight, gridLength];
-        playerGrid = new int[gridHeight, gridLength];
-        //Debug용_Start
-        //baseGrid = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
-        //playerGrid = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 } };
-        //Debug용_End
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        Debug.Log(baseGrid[2, 0] + baseGrid[2, 1] + baseGrid[2, 2]);
-        Debug.Log("ValidCheck = " + ValidCheck(playerGrid));
-        TimerNext(playerGrid);
-        Debug.Log(baseGrid[2,0] + baseGrid[2, 1] + baseGrid[2, 2]);
-	}
+    //합수
 
-    /// <summary>
-    /// 해당 배치를 게임 판에 적용해도 되는지 여부조사
-    /// <para/>True : 겹치지 않는다
-    /// <para>False : 겹친다</para>
-    /// </summary>
-    /// <param name="grid"></param>
-    /// <returns></returns>
-    bool ValidCheck(int[,] grid)
+    public bool ValidCheck(TetrisGrid mainGrid)
     {
-        //GetLength(X)로 X차원의 길이를 젤 수 있다.
-        //Debug.Log("Length = " + grid.GetLength(1));
-        //Debug.Log("Height = " + grid.GetLength(0));
-
-        for (int x = 0 ; x < grid.GetLength(1); x += 1)
+        //행렬 사이즈가 다른 경우 FALSE 반환
+        if (mainGrid.gridHeight != this.gridHeight || mainGrid.gridLength != this.gridLength)
         {
-            for (int y =0; y < grid.GetLength(0); y += 1)
+            Debug.Log("The grid size doesn't match");
+            return false;
+        }
+
+        for(int y = 0; y < gridHeight; y++)
+        {
+            for(int x = 0; x < gridLength; x++)
             {
-                //인풋 좌표에서 1값이 있는 칸에
-                if (grid[y,x] != 0)
+                //행렬에서 블록이 겹치는 경우(곱할경우 0이 아님)
+                if (mainGrid.grid[y,x] * this.grid[y,x] != 0)
                 {
-                    //Debug.Log("(" + y + "," + x + ")");
-                    //게임 판이 칸을 이미 차지하고 있음면 거짓
-                    if (baseGrid[y, x] != 0)
-                        return false;
-                    //게임 판의 칸이 비어있으면 참
-                    else
-                        return true;                    
+                    return false;
                 }
             }
         }
 
-        return false;
+        //겹치는 블록이 없다면 TRUE 반환
+        return true;
     }
 
-    /// <summary>
-    /// 타이머 지나고 난후 그리드 처리
-    /// </summary>
-    /// <param name="grid"></param>
-    /// <param name=""></param>
-    void TimerNext(int[,] grid)
-    {
-        //플레이어 블록이 더 내려갈 수 있는 여부 확인
-        //플레이어 블록이 맨 아랫줄에 있는가?
-        for(int x = 0; x < gridLength; x += 1)
-        {
-            //있는 경우 플레이어 블록을 게임 블록에 적용하고 새로운 블록을 생성한다.
-            if (grid[(gridHeight-1),x] != 0)
-            {
-                for(int yy = 0; yy < gridHeight; yy += 1)
-                {
-                    for(int xx = 0; xx < gridLength; xx += 1)
-                    {
-                        baseGrid[yy, xx] = baseGrid[yy, xx] + grid[yy, xx];
-                    }
-                }
-                //새로운 블록 생성 함수 (playerGrid 초기화, 새로운 블록 적용)
-                return;
-            }
-
-        }
-        //맨 아랫줄에 없는 경우, 블록을 한칸 내릴 수 있는지 확인한다.
-        return;
-    }
 }
