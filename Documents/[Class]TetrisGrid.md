@@ -22,6 +22,10 @@
 	- 블록 회전 할때 현재 회전 상태 값
 - [Int]_color
 	- 블록 색
+- [Bool]canMoveDown
+	- 블록이 더 밑으로 내려 갈수 있는지 확인
+	- False인 경우 GM에서 타이머 지나고 mainGrid에 적용
+	- !!중요!! : mainGrid에 적용하기 전에 MoveDown 함수를 사용해서 canMoveDown을 최신화해야한다.
 
 ###함수
 - ValidCheck
@@ -32,22 +36,20 @@
 - 블록 회전
 	- 유효성검사 포함
 	- Input : 블록 종류
-- 왼쪽 이동
+- MoveLeft
 	- 유효성검사 포함
 	- Input : (베이스)그리드
-- 오른쪽 이동
+- MoveRight
 	- 유효성검사 포함
 	- Input : (베이스)그리드
-- 아래쪽 이동
+- MoveDown
 	- 유효성검사 포함
+	- !!중요!! : canMoveDown 최신화
 	- Input : (베이스)그리드
-- 아래 이동
-	- 유혀성검사 포함
-	- Input : (베이스)그리드
-- 합치기(Confirm)
+- MergeGrid
 	- 플레이어 블록 위치가 확정되어 메인 그리드에 적용할
 	- Input : (베이스)그리드
-- NextTimer(일정 시간 지난후)
+- 일정 시간 지난후(NextTimer) <= GM스크립트에 있어야할듯
 	- Input : (베이스)그리드
 - 줄 지우기
 	- 한꺼번에 지워지는 것도 
