@@ -1,4 +1,4 @@
-##[클래스]TetrisGrid
+##[Class]TetrisGrid
 
 ###변수
 - [Array]grid
