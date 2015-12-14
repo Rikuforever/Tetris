@@ -29,10 +29,15 @@ public class TetrisGrid {
     *///
     public bool canMoveDown;
 
-
     /*//
     합수
     *///
+
+    public TetrisGrid (int gridHeight, int gridLength)
+    {
+        this.gridHeight = gridHeight;
+        this.gridLength = gridLength;
+    }
 
     ////유효성검사
     public bool ValidCheck(TetrisGrid mainGrid)

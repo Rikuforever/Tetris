@@ -16,7 +16,7 @@
 
 
 ###함수
-- 보드업데이트
+- BoardUpdate
 	- 변경된 그리드 정보를 받아 오브젝트들을 껏다 켰다한다.
 	- input : mainGrid, playerGrid
 - BoardSetup
