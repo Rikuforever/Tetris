@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+
+/*//
+Enum [전역]
+*///
+public enum blockType { Main, I, J, L, S, Z, T, O, NUM_TYPES }
+public enum blockColor { Null, Sky, Blue, Orange, Green, Red, Purple, Yellow, Grey, NUM_COLORS }
 
 //MonoBehavior에서 제공하는 함수 등이 필요 없기 때문에 제거
 public class TetrisGrid {
 
-    /*//
-    Enum
-    *///
-    private enum _blockType { Main, I, J, L, S, Z, T, O }
+    private blockType _blockType;
+    
 
     /*//
     Int
@@ -33,10 +38,12 @@ public class TetrisGrid {
     합수
     *///
 
+    ////생성자 (블록타입 추가 필요)
     public TetrisGrid (int gridHeight, int gridLength)
     {
         this.gridHeight = gridHeight;
         this.gridLength = gridLength;
+        this.grid = new int[gridHeight, gridLength];
     }
 
     ////유효성검사
