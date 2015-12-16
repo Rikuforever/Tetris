@@ -6,31 +6,79 @@ public class GameManager : MonoBehaviour {
     public int gridHeight;
     public int gridLength;
 
+    public float gameSpeed;
+    public float holdTime;
+    private float _timeCounter;
+    private float _holdCounter;
+
     private BoardManager boardScript;
-    private TetrisGrid mainGrid;
 
     public TetrisGrid levelGrid;
+    private TetrisGrid mainGrid;
+    private TetrisGrid playerGrid;
+
+
 
 
     // Use this for initialization
-    void Start() {
+    void Awake() {
         boardScript = GetComponent<BoardManager>();
-        //levelGrid = null;
-        mainGrid = new TetrisGrid(gridHeight, gridLength);
-        mainGrid.grid = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
-        levelGrid = new TetrisGrid(gridHeight, gridLength);
-        levelGrid.grid = new int[3, 3] { { 0, 0, 1 },{ 0,0,1},{ 0,0,1} };
 	}
+
+    void Start()
+    {
+        //levelGrid = null;
+        playerGrid = new TetrisGrid(gridHeight, gridLength);
+        playerGrid.grid = new int[3, 3] { { 0, 0, 1 }, { 0, 0, 1 }, { 0, 0, 1 } };
+        mainGrid = new TetrisGrid(playerGrid.gridHeight, playerGrid.gridLength);
+        mainGrid.grid = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+        if (_timeCounter >= gameSpeed)
+        {
+            playerGrid.MoveDown(mainGrid);
+            Debug.Log(playerGrid.canMoveDown);
+            if(playerGrid.canMoveDown == false)
+            {
+                //다음 페이즈로 넘어간다.
+                Debug.Log("EndPhase");
+                EndPhase();
+                _timeCounter = 0f;
+                return;
+            }
+
+            _timeCounter = 0f;
+        }
+
+        //왼쪽 키 누를 경우
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            Debug.Log("Pressed left");
+            playerGrid.MoveLeft(mainGrid);    
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            Debug.Log("Pressed Right");
+            playerGrid.MoveRight(mainGrid);
+        }
+
+        boardScript.BoardUpdate(mainGrid, playerGrid);
+        _timeCounter += Time.deltaTime;
 	}
 
     public void StartGame()
     {
         boardScript.BoardSetup();
-        boardScript.BoardUpdate(mainGrid, levelGrid);
-        levelGrid.MoveLeft(mainGrid);
+        boardScript.BoardUpdate(mainGrid, playerGrid);
+        playerGrid.MoveLeft(mainGrid);
+    }
+
+    private void EndPhase()
+    {
+
     }
 }
