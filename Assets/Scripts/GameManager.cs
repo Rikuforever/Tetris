@@ -32,16 +32,20 @@ public class GameManager : MonoBehaviour {
         playerGrid.grid = new int[3, 3] { { 0, 0, 1 }, { 0, 0, 1 }, { 0, 0, 1 } };
         mainGrid = new TetrisGrid(playerGrid.gridHeight, playerGrid.gridLength);
         mainGrid.grid = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+        boardScript.BoardSetup();
     }
 	
 	// Update is called once per frame
 	void Update () {
 
+        //일정 시간 마다
         if (_timeCounter >= gameSpeed)
         {
+            //블록이 내려가고
             playerGrid.MoveDown(mainGrid);
             Debug.Log(playerGrid.canMoveDown);
-            if(playerGrid.canMoveDown == false)
+            //못 내려갈 경우
+            if (playerGrid.canMoveDown == false)
             {
                 //다음 페이즈로 넘어간다.
                 Debug.Log("EndPhase");
@@ -59,7 +63,7 @@ public class GameManager : MonoBehaviour {
             Debug.Log("Pressed left");
             playerGrid.MoveLeft(mainGrid);    
         }
-
+        //오른쪽 키 누를 경우
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             Debug.Log("Pressed Right");
