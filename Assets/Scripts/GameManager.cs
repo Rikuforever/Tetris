@@ -29,8 +29,28 @@ public class GameManager : MonoBehaviour {
     void Start()
     {
         //[임시]levelGrid 아직 미구현
-        levelGrid = new TetrisGrid(gridLength, gridLength);
-        levelGrid.grid = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+        levelGrid = new TetrisGrid(gridHeight, gridLength);
+        levelGrid.grid = new int[20, 10] {
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
         //levelGrid에서 받은 정보 적용, gridHeight 와 gridLength 설정
         mainGrid = levelGrid;
@@ -39,7 +59,27 @@ public class GameManager : MonoBehaviour {
         
         //[임시]블록 생성 미구현이므로 수동 설정
         playerGrid = new TetrisGrid(gridHeight, gridLength);
-        playerGrid.grid = new int[3, 3] { { 0, 0, 1 }, { 0, 0, 1 }, { 0, 0, 1 } };
+        playerGrid.grid = new int[20, 10] {
+            { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
         boardScript.BoardSetup();
     }
@@ -70,12 +110,13 @@ public class GameManager : MonoBehaviour {
         ////컨트롤 관련
 
         UpdateHoldingKey();
-        Debug.Log(_isHolding);
+        //Debug.Log(_isHolding);
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             //블록 회전
         }
+        
         //[임시]아래키 홀딩 구현 필요
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -84,6 +125,7 @@ public class GameManager : MonoBehaviour {
             if (playerGrid.canMoveDown == true)
                 _timeCounter = 0f;
         }
+
         if (Input.GetKey(KeyCode.RightArrow) && (_isHolding == holdKey.Right))
         {
             if(holdTime <= _holdCounter)
@@ -94,7 +136,8 @@ public class GameManager : MonoBehaviour {
 
             _holdCounter += Time.deltaTime;
         }
-        if(Input.GetKey(KeyCode.LeftArrow) && (_isHolding == holdKey.Left))
+
+        if (Input.GetKey(KeyCode.LeftArrow) && (_isHolding == holdKey.Left))
         {
             if (holdTime <= _holdCounter)
             {
