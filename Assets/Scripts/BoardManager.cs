@@ -37,7 +37,7 @@ public class BoardManager : MonoBehaviour {
         _boardGrid = new int[gameScirpt.gridHeight, gameScirpt.gridLength];
     }
 
-
+    //보드 초기화
     public void BoardSetup()
     {
         //_boardGrid 초기화

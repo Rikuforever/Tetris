@@ -196,4 +196,23 @@ public class TetrisGrid {
             }
         }
     }
+
+    ////회전
+    public void Turn(TetrisGrid mainGrid)
+    {
+        //I 타입
+        if (this._blockType == blockType.I)
+        {
+            int x = this._pivot[0];
+            int y = this._pivot[1];
+
+            if (this._blockTurnState == 0)
+            {
+                TetrisGrid temp = this;
+
+                //배열 크기 체크(회전할 공간 없을 경우 Pivot 이동)
+
+            }
+        }
+    }
 }

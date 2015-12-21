@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour {
     public float gameSpeed;
     public float holdTime;
     private float _timeCounter;
-    private float _holdCounter;
+    private float _RLholdCounter;
+    private float _DholdCounter;
 
     private BoardManager boardScript;
 
@@ -100,6 +101,7 @@ public class GameManager : MonoBehaviour {
             if (playerGrid.canMoveDown == false)
             {
                 //다음 페이즈로 넘어간다.
+                Debug.Log("EndPhase");
                 EndPhase();
                 
                 //다른 input무시
@@ -117,35 +119,41 @@ public class GameManager : MonoBehaviour {
             //블록 회전
         }
         
-        //[임시]아래키 홀딩 구현 필요
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
-            playerGrid.MoveDown(mainGrid);
+            if(holdTime <= _DholdCounter)
+            {
+                playerGrid.MoveDown(mainGrid);
+                _DholdCounter = 0;
+            }
+            
             //내려갈시 카운터 초기화
             if (playerGrid.canMoveDown == true)
                 _timeCounter = 0f;
+
+            _DholdCounter += Time.deltaTime;
         }
 
         if (Input.GetKey(KeyCode.RightArrow) && (_isHolding == holdKey.Right))
         {
-            if(holdTime <= _holdCounter)
+            if(holdTime <= _RLholdCounter)
             {
                 playerGrid.MoveRight(mainGrid);
-                _holdCounter = 0f;
+                _RLholdCounter = 0f;
             }
 
-            _holdCounter += Time.deltaTime;
+            _RLholdCounter += Time.deltaTime;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow) && (_isHolding == holdKey.Left))
         {
-            if (holdTime <= _holdCounter)
+            if (holdTime <= _RLholdCounter)
             {
                 playerGrid.MoveLeft(mainGrid);
-                _holdCounter = 0f;
+                _RLholdCounter = 0f;
             }
 
-            _holdCounter += Time.deltaTime;
+            _RLholdCounter += Time.deltaTime;
         }
 
 
@@ -170,6 +178,12 @@ public class GameManager : MonoBehaviour {
 
     private void UpdateHoldingKey()
     {
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            //홀딩시간 초기화
+            _DholdCounter = holdTime;
+        }
+
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             //동시 인풋시 무시
@@ -177,7 +191,7 @@ public class GameManager : MonoBehaviour {
                 return;
 
             //홀딩시간 초기화
-            _holdCounter = holdTime;
+            _RLholdCounter = holdTime;
 
             _isHolding = holdKey.Left;
             return;
@@ -189,7 +203,7 @@ public class GameManager : MonoBehaviour {
                 return;
 
             //홀딩시간 초기화
-            _holdCounter = holdTime;
+            _RLholdCounter = holdTime;
 
             _isHolding = holdKey.Right;
             return;
@@ -197,7 +211,7 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
             //홀딩시간 초기화
-            _holdCounter = holdTime;
+            _RLholdCounter = holdTime;
 
             if (Input.GetKey(KeyCode.RightArrow))
             {
@@ -211,7 +225,7 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.RightArrow))
         {
             //홀딩시간 초기화
-            _holdCounter = holdTime;
+            _RLholdCounter = holdTime;
 
             if (Input.GetKey(KeyCode.LeftArrow))
             {
