@@ -30,6 +30,11 @@ public class TetrisGrid {
     public int[,] grid;
 
     /*//
+    Bool
+    *///
+    private bool _validCheck;
+
+    /*//
     합수
     *///
 
@@ -98,8 +103,8 @@ public class TetrisGrid {
             this.grid[y, gridLength - 1] = 0;
         }
 
-        //mainGrid와 겹치면 복귀
-        if (ValidCheck(mainGrid) == false)
+        //mainGrid와 겹치면 복귀 또는 mainGrid가 비어있으면 그대로 반환 
+        if (ValidCheck(mainGrid) == false && mainGrid != null)
         {
             this.grid = tempGrid;
             valid = false;
@@ -139,7 +144,7 @@ public class TetrisGrid {
         }
         
         //mainGrid와 겹치면 복귀
-        if (ValidCheck(mainGrid) == false)
+        if (ValidCheck(mainGrid) == false && mainGrid != null)
         {
             this.grid = tempGrid;
             valid = false;
@@ -178,7 +183,7 @@ public class TetrisGrid {
         }
 
         //mainGrid와 겹치면 복귀 및 valid 거짓
-        if (ValidCheck(mainGrid) == false)
+        if (ValidCheck(mainGrid) == false && mainGrid != null)
         {
             this.grid = tempGrid;
             valid = false;
@@ -208,16 +213,15 @@ public class TetrisGrid {
         //I 타입
         if (this._blockType == blockType.I)
         {
+            TetrisGrid temp = this;
 
             //TurnState == 0
             if (this._blockTurnState == 0)
             {
-                TetrisGrid temp = this;
-
                 //배열 크기 체크(회전할 공간 없을 경우 Pivot 이동)
                 if(this._pivotX > 0)
                 {
-
+                    
                 }
 
             }
