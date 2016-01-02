@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour {
     private float _RLholdCounter;
     private float _DholdCounter;
 
+    private bool _validCheck;
+
     private BoardManager boardScript;
 
     public TetrisGrid levelGrid;
@@ -95,10 +97,10 @@ public class GameManager : MonoBehaviour {
             _timeCounter = 0f;
 
             //블록이 내려가고
-            playerGrid.MoveDown(mainGrid);
+            playerGrid.MoveDown(mainGrid, out _validCheck);
             
             //못 내려갈 경우
-            if (playerGrid.canMoveDown == false)
+            if (_validCheck == false)
             {
                 //다음 페이즈로 넘어간다.
                 Debug.Log("EndPhase");
@@ -123,37 +125,36 @@ public class GameManager : MonoBehaviour {
         {
             if(holdTime <= _DholdCounter)
             {
-                playerGrid.MoveDown(mainGrid);
+                playerGrid.MoveDown(mainGrid, out _validCheck);
                 _DholdCounter = 0;
             }
-            
+            else
+                _DholdCounter += Time.deltaTime;
             //내려갈시 카운터 초기화
-            if (playerGrid.canMoveDown == true)
+            if (_validCheck == true)
                 _timeCounter = 0f;
-
-            _DholdCounter += Time.deltaTime;
         }
 
         if (Input.GetKey(KeyCode.RightArrow) && (_isHolding == holdKey.Right))
         {
             if(holdTime <= _RLholdCounter)
             {
-                playerGrid.MoveRight(mainGrid);
+                playerGrid.MoveRight(mainGrid, out _validCheck);
                 _RLholdCounter = 0f;
             }
-
-            _RLholdCounter += Time.deltaTime;
+            else
+                _RLholdCounter += Time.deltaTime;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow) && (_isHolding == holdKey.Left))
         {
             if (holdTime <= _RLholdCounter)
             {
-                playerGrid.MoveLeft(mainGrid);
+                playerGrid.MoveLeft(mainGrid, out _validCheck);
                 _RLholdCounter = 0f;
             }
-
-            _RLholdCounter += Time.deltaTime;
+            else
+                _RLholdCounter += Time.deltaTime;
         }
 
 
@@ -168,7 +169,6 @@ public class GameManager : MonoBehaviour {
     {
         boardScript.BoardSetup();
         boardScript.BoardUpdate(mainGrid, playerGrid);
-        playerGrid.MoveLeft(mainGrid);
     }
 
     private void EndPhase()

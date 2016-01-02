@@ -21,18 +21,13 @@ public class TetrisGrid {
     public int gridLength;
     private int _blockTurnState;
     private int _color;
-
+    private int _pivotX;
+    private int _pivotY;
 
     /*//
     Array int
     *///
     public int[,] grid;
-    private int[] _pivot;
-
-    /*//
-    Bool
-    *///
-    public bool canMoveDown;
 
     /*//
     합수
@@ -45,7 +40,7 @@ public class TetrisGrid {
         this.gridLength = gridLength;
         this.grid = new int[gridHeight, gridLength];
     }
-
+    
     ////유효성검사
     public bool ValidCheck(TetrisGrid mainGrid)
     {
@@ -73,13 +68,16 @@ public class TetrisGrid {
     }
     
     ////왼쪽이동
-    public void MoveLeft(TetrisGrid mainGrid)
+    public void MoveLeft(TetrisGrid mainGrid, out bool valid)
     {
+        valid = true;
+        
         //왼쪽 가장자리에 블록이 있다면 변화 없음
         for(int y = 0; y < gridHeight; y++)
         {
                 if(this.grid[y,0] != 0)
                 {
+                    valid = false;
                     return;
                 }
         }
@@ -104,17 +102,22 @@ public class TetrisGrid {
         if (ValidCheck(mainGrid) == false)
         {
             this.grid = tempGrid;
+            valid = false;
         }
     }
 
+
     ////오른쪽이동
-    public void MoveRight(TetrisGrid mainGrid)
+    public void MoveRight(TetrisGrid mainGrid, out bool valid)
     {
+        valid = true;
+        
         //오른쪽 가장자리에 블록이 있다면 변화 없음
         for (int y = 0; y < gridHeight; y++)
         {
                 if (this.grid[y, gridLength - 1 ] != 0)
                 {
+                    valid = false;
                     return;
                 }
         }
@@ -139,18 +142,21 @@ public class TetrisGrid {
         if (ValidCheck(mainGrid) == false)
         {
             this.grid = tempGrid;
+            valid = false;
         }
     }
 
     ////아래이동
-    public void MoveDown(TetrisGrid mainGrid)
+    public void MoveDown(TetrisGrid mainGrid, out bool valid)
     {
-        //바닥에 블록이 있는 경우 변경 없음 및 canMoveDown 거짓
+        valid = true;
+        
+        //바닥에 블록이 있는 경우 변경 없음 및 valid 거짓
         for(int x = 0; x < gridLength; x++)
         {
             if(this.grid[ gridHeight - 1 ,x] != 0)
             {
-                canMoveDown = false;
+                valid = false;
                 return;
             }
         }
@@ -158,7 +164,7 @@ public class TetrisGrid {
         //grid 임시 저장
         int[,] tempGrid = this.grid;
 
-        //아래쪽 이동 및 canMoveDown 참
+        //아래쪽 이동 및 valid 참
         for (int y = gridHeight - 1; y > 0 ; y--)
         {
             for(int x = 0; x < gridLength; x++)
@@ -170,13 +176,12 @@ public class TetrisGrid {
         {
             this.grid[0, x] = 0;
         }
-        canMoveDown = true;
 
-        //mainGrid와 겹치면 복귀 및 canMoveDown 거짓
+        //mainGrid와 겹치면 복귀 및 valid 거짓
         if (ValidCheck(mainGrid) == false)
         {
-            canMoveDown = false;
             this.grid = tempGrid;
+            valid = false;
         }
     }
 
@@ -203,14 +208,17 @@ public class TetrisGrid {
         //I 타입
         if (this._blockType == blockType.I)
         {
-            int x = this._pivot[0];
-            int y = this._pivot[1];
 
+            //TurnState == 0
             if (this._blockTurnState == 0)
             {
                 TetrisGrid temp = this;
 
                 //배열 크기 체크(회전할 공간 없을 경우 Pivot 이동)
+                if(this._pivotX > 0)
+                {
+
+                }
 
             }
         }
