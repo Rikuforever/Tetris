@@ -38,12 +38,16 @@ public class TetrisGrid {
     합수
     *///
 
-    ////생성자 (블록타입 추가 필요)
-    public TetrisGrid (int gridHeight, int gridLength)
+    ////[임시]생성자 (블록타입 추가 필요)
+    public TetrisGrid (int gridHeight, int gridLength, blockType blockType, int pivotX, int pivotY, int turnState)
     {
         this.gridHeight = gridHeight;
         this.gridLength = gridLength;
         this.grid = new int[gridHeight, gridLength];
+        this._blockType = blockType;
+        this._pivotX = pivotX;
+        this._pivotY = pivotY;
+        this._blockTurnState = turnState;
     }
     
     ////유효성검사
@@ -91,7 +95,7 @@ public class TetrisGrid {
         TetrisGrid temp = this;
 
         //왼쪽 이동
-        this._pivotX += 1;
+        this._pivotX -= 1;
 
         for (int y = 0; y < gridHeight; y++)
         {
@@ -106,7 +110,7 @@ public class TetrisGrid {
         }
 
         //mainGrid와 겹치면 복귀 또는 mainGrid가 비어있으면 그대로 반환 
-        if (ValidCheck(mainGrid) == false && mainGrid != null)
+        if (mainGrid != null && ValidCheck(mainGrid) == false)
         {
             this.grid = temp.grid;
             this._pivotX = temp._pivotX;
@@ -134,7 +138,7 @@ public class TetrisGrid {
         TetrisGrid temp = this;
 
         //오른쪽 이동
-        this._pivotX -= 1;
+        this._pivotX += 1;
 
         for (int y = 0; y < gridHeight; y++)
         {
@@ -149,7 +153,7 @@ public class TetrisGrid {
         }
         
         //mainGrid와 겹치면 복귀
-        if (ValidCheck(mainGrid) == false && mainGrid != null)
+        if (mainGrid != null && ValidCheck(mainGrid) == false)
         {
             this.grid = temp.grid;
             this._pivotX = temp._pivotX;
@@ -191,7 +195,49 @@ public class TetrisGrid {
         }
 
         //mainGrid와 겹치면 복귀 및 valid 거짓
-        if (ValidCheck(mainGrid) == false && mainGrid != null)
+        if (mainGrid != null && ValidCheck(mainGrid) == false)
+        {
+            this.grid = temp.grid;
+            this._pivotY = temp._pivotY;
+            valid = false;
+        }
+    }
+
+    ////위이동
+    public void MoveUp(TetrisGrid mainGrid, out bool valid)
+    {
+        valid = true;
+
+        //천장에 있는 경우 변경 없음 및 valid 거짓
+        for (int x = 0; x < gridLength; x++)
+        {
+            if (this.grid[0, x] != 0)
+            {
+                valid = false;
+                return;
+            }
+        }
+
+        //grid 임시 저장
+        TetrisGrid temp = this;
+
+        //위 이동 및 valid 참
+        this._pivotY -= 1;
+
+        for (int y = 1; y < gridHeight; y++)
+        {
+            for (int x = 0; x < gridLength; x++)
+            {
+                this.grid[y - 1, x] = this.grid[y, x];
+            }
+        }
+        for (int x = 0; x < gridLength; x++)
+        {
+            this.grid[gridHeight - 1, x] = 0;
+        }
+
+        //mainGrid와 겹치면 복귀 및 valid 거짓
+        if (mainGrid != null && ValidCheck(mainGrid) == false)
         {
             this.grid = temp.grid;
             this._pivotY = temp._pivotY;
@@ -228,39 +274,43 @@ public class TetrisGrid {
             if (this._blockTurnState == 0)
             {
                 //배열 크기 확인, 공간 부족할시 임시 이동
-                if(this._pivotX == 0)
+                if (this._pivotX == 0 || this.grid[_pivotY, _pivotX - 1] != 0)
                 {
                     MoveRight(null, out _validCheck);
                 }
-                else if(this._pivotX == (this.gridLength - 1))
+                else if (this._pivotX == (this.gridLength - 1) || this.grid[_pivotY, _pivotX + 1] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                     MoveLeft(null, out _validCheck);
                 }
-                else if(this._pivotX == (this.gridLength - 2))
+                else if (this._pivotX == (this.gridLength - 2) || this.grid[_pivotY, _pivotX + 2] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                 }
 
                 //임시 회전
-                MoveBlock(_pivotX, _pivotY - 1, _pivotX + 2, _pivotY - 1);
+                Debug.Log("TurnStart");
+                MoveBlock(_pivotX, _pivotY - 1, _pivotX + 2, _pivotY);
                 MoveBlock(_pivotX, _pivotY, _pivotX + 1, _pivotY);
                 MoveBlock(_pivotX, _pivotY + 1, _pivotX, _pivotY);
                 MoveBlock(_pivotX, _pivotY + 2, _pivotX - 1, _pivotY);
+                Debug.Log("TurnEnd");
                 //정보 갱신
                 this._pivotX += 1;
                 this._blockTurnState = 1;
+                Debug.Log("NewPivotX: " + this._pivotX + " NewPivotY: " + this._pivotY +" NewTurnState" + this._blockTurnState);
 
-                //유효성 체크, false시 겹치는 부위 확인
+                //유효성 체크, false시 위로 한칸 올린다.
                 if (ValidCheck(mainGrid) == false)
                 {
-                    if(mainGrid.grid[_pivotY, _pivotX - 2] != 0)
+                    MoveUp(mainGrid, out _validCheck);
+                    //그래도 겹치면 원위치
+                    if(_validCheck == false)
                     {
-                        MoveRight(mainGrid, out _validCheck);
-                        if (_validCheck == false)
-                        {
-
-                        }
+                        this._pivotX = temp._pivotX;
+                        this._pivotY = temp._pivotY;
+                        this.grid = temp.grid;
+                        this._blockTurnState = temp._blockTurnState;
                     }
                 }
 

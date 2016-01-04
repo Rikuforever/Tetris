@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour {
     void Start()
     {
         //[임시]levelGrid 아직 미구현
-        levelGrid = new TetrisGrid(gridHeight, gridLength);
+        levelGrid = new TetrisGrid(gridHeight, gridLength, blockType.Main, 0,0,0);
         levelGrid.grid = new int[20, 10] {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -59,14 +59,14 @@ public class GameManager : MonoBehaviour {
         mainGrid = levelGrid;
         this.gridHeight = mainGrid.gridHeight;
         this.gridLength = mainGrid.gridLength;
-        
+
         //[임시]블록 생성 미구현이므로 수동 설정
-        playerGrid = new TetrisGrid(gridHeight, gridLength);
+        playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.I, 4, 1, 0);
         playerGrid.grid = new int[20, 10] {
-            { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -84,6 +84,8 @@ public class GameManager : MonoBehaviour {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
+
+        //보드 초기화
         boardScript.BoardSetup();
     }
 	
@@ -157,6 +159,10 @@ public class GameManager : MonoBehaviour {
                 _RLholdCounter += Time.deltaTime;
         }
 
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            playerGrid.Turn(mainGrid);
+        }
 
         ////컨트롤 관련 End
 
