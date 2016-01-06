@@ -56,6 +56,7 @@ public class TetrisGrid {
     {
         this.gridHeight = T.gridHeight;
         this.gridLength = T.gridLength;
+        //배열 복사할때는 Clone() 사용
         this.grid = (int[,])T.grid.Clone();
         this._blockType = T._blockType;
         this._pivotX = T._pivotX;
@@ -292,16 +293,17 @@ public class TetrisGrid {
             if (this._blockTurnState == 0)
             {
                 //배열 크기 확인, 공간 부족할시 임시 이동
-                if (this._pivotX == 0 || this.grid[_pivotY, _pivotX - 1] != 0)
+                if (this._pivotX == 0 || mainGrid.grid[_pivotY, _pivotX - 1] != 0)
                 {
+                    Debug.Log("MovedRight");
                     MoveRight(null, out _validCheck);
                 }
-                else if (this._pivotX == (this.gridLength - 1) || this.grid[_pivotY, _pivotX + 1] != 0)
+                else if (this._pivotX == (this.gridLength - 1) || mainGrid.grid[_pivotY, _pivotX + 1] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                     MoveLeft(null, out _validCheck);
                 }
-                else if (this._pivotX == (this.gridLength - 2) || this.grid[_pivotY, _pivotX + 2] != 0)
+                else if (this._pivotX == (this.gridLength - 2) || mainGrid.grid[_pivotY, _pivotX + 2] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                 }
