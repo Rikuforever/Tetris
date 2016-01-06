@@ -9,6 +9,7 @@ public enum blockType { Main, I, J, L, S, Z, T, O, NUM_TYPES }
 public enum blockColor { Null, Sky, Blue, Orange, Green, Red, Purple, Yellow, Grey, NUM_COLORS }
 
 //MonoBehavior에서 제공하는 함수 등이 필요 없기 때문에 제거
+[Serializable]
 public class TetrisGrid {
 
     private blockType _blockType;
@@ -50,6 +51,20 @@ public class TetrisGrid {
         this._blockTurnState = turnState;
     }
     
+    ////복사생성자
+    public TetrisGrid (TetrisGrid T)
+    {
+        this.gridHeight = T.gridHeight;
+        this.gridLength = T.gridLength;
+        this.grid = (int[,])T.grid.Clone();
+        this._blockType = T._blockType;
+        this._pivotX = T._pivotX;
+        this._pivotY = T._pivotY;
+        this._blockTurnState = T._blockTurnState;
+        this._color = T._color;
+        this._validCheck = T._validCheck;
+    }
+
     ////유효성검사
     public bool ValidCheck(TetrisGrid mainGrid)
     {
@@ -92,7 +107,7 @@ public class TetrisGrid {
         }
 
         //grid 임시 저장
-        TetrisGrid temp = this;
+        TetrisGrid temp = new TetrisGrid(this);
 
         //왼쪽 이동
         this._pivotX -= 1;
@@ -112,7 +127,10 @@ public class TetrisGrid {
         //mainGrid와 겹치면 복귀 또는 mainGrid가 비어있으면 그대로 반환 
         if (mainGrid != null && ValidCheck(mainGrid) == false)
         {
+            Debug.Log("GoBack!");
             this.grid = temp.grid;
+            Debug.Log(this.grid[2, 0]);
+            Debug.Log(temp.grid[2, 0]);
             this._pivotX = temp._pivotX;
             valid = false;
         }
@@ -135,7 +153,7 @@ public class TetrisGrid {
         }
 
         //grid 임시 저장
-        TetrisGrid temp = this;
+        TetrisGrid temp = new TetrisGrid(this);
 
         //오른쪽 이동
         this._pivotX += 1;
@@ -177,7 +195,7 @@ public class TetrisGrid {
         }
 
         //grid 임시 저장
-        TetrisGrid temp = this;
+        TetrisGrid temp = new TetrisGrid(this);
 
         //아래쪽 이동 및 valid 참
         this._pivotY += 1;
@@ -219,7 +237,7 @@ public class TetrisGrid {
         }
 
         //grid 임시 저장
-        TetrisGrid temp = this;
+        TetrisGrid temp = new TetrisGrid(this);
 
         //위 이동 및 valid 참
         this._pivotY -= 1;
@@ -268,7 +286,7 @@ public class TetrisGrid {
         //I 타입
         if (this._blockType == blockType.I)
         {
-            TetrisGrid temp = this;
+            TetrisGrid temp = new TetrisGrid(this);
 
             //TurnState == 0
             if (this._blockTurnState == 0)
