@@ -137,7 +137,6 @@ public class TetrisGrid {
         }
     }
 
-
     ////오른쪽이동
     public void MoveRight(TetrisGrid mainGrid, out bool valid)
     {
