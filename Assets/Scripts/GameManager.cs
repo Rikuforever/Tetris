@@ -61,12 +61,12 @@ public class GameManager : MonoBehaviour {
         this.gridLength = mainGrid.gridLength;
 
         //[임시]블록 생성 미구현이므로 수동 설정
-        playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.I, 4, 1, 0);
+        playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.J, 4, 1, 0);
         playerGrid.grid = new int[20, 10] {
             { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 2, 2, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -91,7 +91,8 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        
+                                                                    /*[임시] 회전확인용
         //일정 시간 마다
         if (_timeCounter >= gameSpeed)
         {
@@ -112,7 +113,8 @@ public class GameManager : MonoBehaviour {
                 return;
             }
         }
-
+                                                                     */
+        
         ////컨트롤 관련
 
         UpdateHoldingKey();
