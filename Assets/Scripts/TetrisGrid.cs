@@ -822,7 +822,7 @@ public class TetrisGrid {
             if (this._blockTurnState == 1)
             {
                 //배열 크기 확인, 공간 부족할시 임시 이동
-                if (this._pivotX == (mainGrid.gridLength - 1))
+                if (this._pivotX == (mainGrid.gridLength - 1) || this.grid[_pivotY - 1, _pivotX] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                 }
@@ -831,25 +831,19 @@ public class TetrisGrid {
                 if (mainGrid.grid[_pivotY - 1, _pivotX] != 0)
                 {
                     MoveLeft(null, out _validCheck);
-                    MoveLeft(null, out _validCheck);
-                }
-                else if (mainGrid.grid[_pivotY - 1, _pivotX + 1] != 0)
-                {
-                    MoveLeft(null, out _validCheck);
                 }
                 if (_validCheck == false)
                 {
                     MoveRight(null, out _validCheck);
                     return;
                 }
-                //=====================================작업선===============================================
                     
 
 
                 //임시 회전
-                MoveBlock(_pivotX - 1, _pivotY + 1, _pivotX - 1, _pivotY - 1);
+                MoveBlock(_pivotX - 1, _pivotY - 1, _pivotX + 1, _pivotY - 1);
                 MoveBlock(_pivotX - 1, _pivotY, _pivotX, _pivotY - 1);
-                MoveBlock(_pivotX + 1, _pivotY, _pivotX, _pivotY + 1);
+                MoveBlock(_pivotX, _pivotY + 1, _pivotX - 1, _pivotY);
 
                 //정보 갱신
                 this._blockTurnState = 2;
@@ -874,17 +868,27 @@ public class TetrisGrid {
             if (this._blockTurnState == 2)
             {
                 //배열 크기 확인, 공간 부족할시 임시 이동
-                if (this._pivotX == (mainGrid.gridLength - 1) || mainGrid.grid[_pivotY, _pivotX + 1] != 0 || mainGrid.grid[_pivotY - 1, _pivotX + 1] != 0)
+                if (this._pivotY == (mainGrid.gridHeight - 1) || mainGrid.grid[_pivotY + 1, _pivotX + 1] != 0)
+                {
+                    MoveUp(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                    return;
+                if (this.grid[_pivotY, _pivotX + 1] != 0 || this.grid[_pivotY + 1, _pivotX + 1] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                 }
                 if (_validCheck == false)
+                {
+                    MoveDown(null, out _validCheck);
                     return;
+                }
+
 
                 //임시 회전
+                MoveBlock(_pivotX + 1, _pivotY - 1, _pivotX + 1, _pivotY + 1);
                 MoveBlock(_pivotX, _pivotY - 1, _pivotX + 1, _pivotY);
-                MoveBlock(_pivotX - 1, _pivotY - 1, _pivotX + 1, _pivotY - 1);
-                MoveBlock(_pivotX, _pivotY + 1, _pivotX - 1, _pivotY);
+                MoveBlock(_pivotX - 1, _pivotY, _pivotX, _pivotY - 1);
 
                 //정보 갱신
                 this._blockTurnState = 3;
@@ -909,17 +913,207 @@ public class TetrisGrid {
             if (this._blockTurnState == 3)
             {
                 //배열 크기 확인, 공간 부족할시 임시 이동
-                if (this._pivotY == (gridHeight - 1) || mainGrid.grid[_pivotY + 1, _pivotX] != 0 || mainGrid.grid[_pivotY + 1, _pivotX + 1] != 0)
+                if (this._pivotX == 0 || mainGrid.grid[_pivotY + 1, _pivotX - 1] != 0)
+                {
+                    MoveRight(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                    return;
+                if (this.grid[_pivotY + 1, _pivotX] != 0)
+                {
+                    MoveRight(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                {
+                    MoveLeft(null, out _validCheck);
+                    return;
+                }
+
+                //임시 회전
+                MoveBlock(_pivotX + 1, _pivotY + 1, _pivotX - 1, _pivotY + 1);
+                MoveBlock(_pivotX + 1, _pivotY, _pivotX, _pivotY + 1);
+                MoveBlock(_pivotX, _pivotY - 1, _pivotX + 1, _pivotY);
+
+                //정보 갱신
+                this._blockTurnState = 0;
+
+                //유효성 체크 
+                if (ValidCheck(mainGrid) == false)
+                {
+                    //[임시] false시 위로 한칸 올린다.
+                    //MoveUp(mainGrid, out _validCheck);
+                    //그래도 겹치면 원위치
+                    //if (_validCheck == false)
+                    //{
+                    this._pivotX = temp._pivotX;
+                    this._pivotY = temp._pivotY;
+                    this.grid = temp.grid;
+                    this._blockTurnState = temp._blockTurnState;
+                    //}
+                }
+                return;
+            }
+        }
+        //Z 타입
+        else if (this._blockType == blockType.Z)
+        {
+
+            //TurnState == 0
+            if (this._blockTurnState == 0)
+            {
+                //배열 크기 확인, 공간 부족할시 임시 이동
+                if (this._pivotY == 0 || mainGrid.grid[_pivotY - 1, _pivotX] != 0)
+                {
+                    MoveDown(null, out _validCheck);
+                }
+                else if (mainGrid.grid[_pivotY + 1, _pivotX - 1] != 0)
+                {
+                    MoveRight(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                    return;
+
+
+                //임시 회전
+                MoveBlock(_pivotX - 1, _pivotY, _pivotX, _pivotY - 1);
+                MoveBlock(_pivotX, _pivotY + 1, _pivotX - 1, _pivotY);
+                MoveBlock(_pivotX + 1, _pivotY + 1, _pivotX - 1, _pivotY + 1);
+
+                //정보 갱신
+                this._blockTurnState = 1;
+
+                //유효성 체크 
+                if (ValidCheck(mainGrid) == false)
+                {
+                    //[임시] false시 위로 한칸 올린다.
+                    //MoveUp(mainGrid, out _validCheck);
+                    //그래도 겹치면 원위치
+                    //if (_validCheck == false)
+                    //{
+                    this._pivotX = temp._pivotX;
+                    this._pivotY = temp._pivotY;
+                    this.grid = temp.grid;
+                    this._blockTurnState = temp._blockTurnState;
+                    //}
+                }
+                return;
+            }
+        //=====================================작업선===============================================
+            //TurnState == 1
+            if (this._blockTurnState == 1)
+            {
+                //배열 크기 확인, 공간 부족할시 임시 이동
+                if (this._pivotX == (mainGrid.gridLength - 1) || this.grid[_pivotY - 1, _pivotX] != 0)
+                {
+                    MoveLeft(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                    return;
+                if (mainGrid.grid[_pivotY - 1, _pivotX] != 0)
+                {
+                    MoveLeft(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                {
+                    MoveRight(null, out _validCheck);
+                    return;
+                }
+
+
+
+                //임시 회전
+                MoveBlock(_pivotX - 1, _pivotY - 1, _pivotX + 1, _pivotY - 1);
+                MoveBlock(_pivotX - 1, _pivotY, _pivotX, _pivotY - 1);
+                MoveBlock(_pivotX, _pivotY + 1, _pivotX - 1, _pivotY);
+
+                //정보 갱신
+                this._blockTurnState = 2;
+
+                //유효성 체크 
+                if (ValidCheck(mainGrid) == false)
+                {
+                    //[임시] false시 위로 한칸 올린다.
+                    //MoveUp(mainGrid, out _validCheck);
+                    //그래도 겹치면 원위치
+                    //if (_validCheck == false)
+                    //{
+                    this._pivotX = temp._pivotX;
+                    this._pivotY = temp._pivotY;
+                    this.grid = temp.grid;
+                    this._blockTurnState = temp._blockTurnState;
+                    //}
+                }
+                return;
+            }
+            //TurnState == 2
+            if (this._blockTurnState == 2)
+            {
+                //배열 크기 확인, 공간 부족할시 임시 이동
+                if (this._pivotY == (mainGrid.gridHeight - 1) || mainGrid.grid[_pivotY + 1, _pivotX + 1] != 0)
                 {
                     MoveUp(null, out _validCheck);
                 }
                 if (_validCheck == false)
                     return;
+                if (this.grid[_pivotY, _pivotX + 1] != 0 || this.grid[_pivotY + 1, _pivotX + 1] != 0)
+                {
+                    MoveLeft(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                {
+                    MoveDown(null, out _validCheck);
+                    return;
+                }
+
 
                 //임시 회전
-                MoveBlock(_pivotX - 1, _pivotY, _pivotX, _pivotY - 1);
-                MoveBlock(_pivotX + 1, _pivotY, _pivotX, _pivotY + 1);
                 MoveBlock(_pivotX + 1, _pivotY - 1, _pivotX + 1, _pivotY + 1);
+                MoveBlock(_pivotX, _pivotY - 1, _pivotX + 1, _pivotY);
+                MoveBlock(_pivotX - 1, _pivotY, _pivotX, _pivotY - 1);
+
+                //정보 갱신
+                this._blockTurnState = 3;
+
+                //유효성 체크 
+                if (ValidCheck(mainGrid) == false)
+                {
+                    //[임시] false시 위로 한칸 올린다.
+                    //MoveUp(mainGrid, out _validCheck);
+                    //그래도 겹치면 원위치
+                    //if (_validCheck == false)
+                    //{
+                    this._pivotX = temp._pivotX;
+                    this._pivotY = temp._pivotY;
+                    this.grid = temp.grid;
+                    this._blockTurnState = temp._blockTurnState;
+                    //}
+                }
+                return;
+            }
+            //TurnState == 3
+            if (this._blockTurnState == 3)
+            {
+                //배열 크기 확인, 공간 부족할시 임시 이동
+                if (this._pivotX == 0 || mainGrid.grid[_pivotY + 1, _pivotX - 1] != 0)
+                {
+                    MoveRight(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                    return;
+                if (this.grid[_pivotY + 1, _pivotX] != 0)
+                {
+                    MoveRight(null, out _validCheck);
+                }
+                if (_validCheck == false)
+                {
+                    MoveLeft(null, out _validCheck);
+                    return;
+                }
+
+                //임시 회전
+                MoveBlock(_pivotX + 1, _pivotY + 1, _pivotX - 1, _pivotY + 1);
+                MoveBlock(_pivotX + 1, _pivotY, _pivotX, _pivotY + 1);
+                MoveBlock(_pivotX, _pivotY - 1, _pivotX + 1, _pivotY);
 
                 //정보 갱신
                 this._blockTurnState = 0;
