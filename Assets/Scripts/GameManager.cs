@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     public int gridHeight;
     public int gridLength;
@@ -25,14 +26,15 @@ public class GameManager : MonoBehaviour {
 
 
     // Use this for initialization
-    void Awake() {
+    void Awake()
+    {
         boardScript = GetComponent<BoardManager>();
-	}
+    }
 
     void Start()
     {
         //[임시]levelGrid 아직 미구현
-        levelGrid = new TetrisGrid(gridHeight, gridLength, blockType.Main, 0,0,0);
+        levelGrid = new TetrisGrid(gridHeight, gridLength, blockType.Main, 0, 0, 0);
         levelGrid.grid = new int[20, 10] {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -46,14 +48,14 @@ public class GameManager : MonoBehaviour {
             { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 }};
+            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 }};
 
         //levelGrid에서 받은 정보 적용, gridHeight 와 gridLength 설정
         mainGrid = levelGrid;
@@ -61,10 +63,10 @@ public class GameManager : MonoBehaviour {
         this.gridLength = mainGrid.gridLength;
 
         //[임시]블록 생성 미구현이므로 수동 설정
-        playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.S, 4, 0, 0);
+        playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.T, 4, 1, 0);
         playerGrid.grid = new int[20, 10] {
-            { 0, 0, 0, 0, 2, 2, 0, 0, 0, 0 },
-            { 0, 0, 0, 2, 2, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 2, 2, 2, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -88,11 +90,12 @@ public class GameManager : MonoBehaviour {
         //보드 초기화
         boardScript.BoardSetup();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        
-                                                                    ///*[임시] 회전확인용
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        ///*[임시] 회전확인용
         //일정 시간 마다
         if (_timeCounter >= gameSpeed)
         {
@@ -101,20 +104,20 @@ public class GameManager : MonoBehaviour {
 
             //블록이 내려가고
             playerGrid.MoveDown(mainGrid, out _validCheck);
-            
+
             //못 내려갈 경우
             if (_validCheck == false)
             {
                 //다음 페이즈로 넘어간다.
                 Debug.Log("EndPhase");
                 EndPhase();
-                
+
                 //다른 input무시
                 return;
             }
         }
-                                                                     //*/
-        
+        //*/
+
         ////컨트롤 관련
 
         UpdateHoldingKey();
@@ -124,10 +127,10 @@ public class GameManager : MonoBehaviour {
         {
             //블록 회전
         }
-        
+
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            if(holdTime <= _DholdCounter)
+            if (holdTime <= _DholdCounter)
             {
                 playerGrid.MoveDown(mainGrid, out _validCheck);
                 _DholdCounter = 0;
@@ -141,7 +144,7 @@ public class GameManager : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.RightArrow) && (_isHolding == holdKey.Right))
         {
-            if(holdTime <= _RLholdCounter)
+            if (holdTime <= _RLholdCounter)
             {
                 playerGrid.MoveRight(mainGrid, out _validCheck);
                 _RLholdCounter = 0f;
@@ -171,7 +174,7 @@ public class GameManager : MonoBehaviour {
         //변경사항 그래픽 적용
         boardScript.BoardUpdate(mainGrid, playerGrid);
         _timeCounter += Time.deltaTime;
-	}
+    }
 
     public void StartGame()
     {
@@ -243,6 +246,40 @@ public class GameManager : MonoBehaviour {
 
             _isHolding = holdKey.Null;
             return;
+        }
+    }
+
+    private void GeneratePlayerGrid()
+    {
+        blockType randomBlockType = (blockType)Random.Range((int)1, (int)blockType.NUM_TYPES);
+
+        switch (randomBlockType)
+        {
+            //=====================================작업선===============================================
+            case blockType.I:
+                playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.I, 4, 1, 0);
+                playerGrid.grid = new int[20, 10] {
+                    { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 2, 2, 2, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+                break;
         }
     }
 }

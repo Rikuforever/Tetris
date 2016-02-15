@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BoardManager : MonoBehaviour {
+public class BoardManager : MonoBehaviour
+{
 
     /*
     GameObject
@@ -29,7 +30,7 @@ public class BoardManager : MonoBehaviour {
     */
 
     void Awake()
-    {   
+    {
         //레퍼런스 받아오기??
         gameScirpt = GetComponent<GameManager>();
 
@@ -50,28 +51,28 @@ public class BoardManager : MonoBehaviour {
 
         for (int y = 0; y < gameScirpt.gridHeight; y++)
         {
-            for(int x = 0; x< gameScirpt.gridLength; x++)
+            for (int x = 0; x < gameScirpt.gridLength; x++)
             {
                 BlockCreate(x, y);
             }
         }
 
         //Board 오브젝의 inactive 한 Child들을 검색하기 위해 검색해 놓는다.
-        _boardHolder.GetComponentInChildren(typeof(Transform));       
+        _boardHolder.GetComponentInChildren(typeof(Transform));
 
     }
 
     //모든 블록들의 상태을 바꾸는 함수
     public void BoardUpdate(TetrisGrid mainGrid, TetrisGrid playerGrid)
-    {        
+    {
         //_boardGrid와 비교하여 변경사항 있으면 적용
         for (int y = 0; y < gameScirpt.gridHeight; y++)
         {
-            for(int x = 0; x < gameScirpt.gridLength; x++)
+            for (int x = 0; x < gameScirpt.gridLength; x++)
             {
                 int temp = mainGrid.grid[y, x] + playerGrid.grid[y, x];
 
-                if(_boardGrid[y,x] != temp)
+                if (_boardGrid[y, x] != temp)
                 {
                     _boardGrid[y, x] = temp;
                     BlockUpdate(x, y, temp);
@@ -87,7 +88,7 @@ public class BoardManager : MonoBehaviour {
         Transform childXY = _boardHolder.Find(findName);
 
         //해당 좌표의 모든 오브젝 끄고
-        for(int a = 0; a < childXY.childCount; a++)
+        for (int a = 0; a < childXY.childCount; a++)
         {
             childXY.GetChild(a).gameObject.SetActive(false);
         }
@@ -109,7 +110,7 @@ public class BoardManager : MonoBehaviour {
 
         //색깔 별로
         for (int c = 0; c < (int)blockColor.NUM_COLORS; c++)
-        {      
+        {
             GameObject newObject = Instantiate(blockTiles[c], new Vector3(x, -y, 0f), Quaternion.identity) as GameObject;
             //int에서 enum으로 변환하는 방법!!
             newObject.name = ((blockColor)c).ToString();
