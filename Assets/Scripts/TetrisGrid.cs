@@ -408,6 +408,16 @@ public class TetrisGrid
         }
     }
 
+    public void MoveButtom(TetrisGrid mainGrid)
+    {
+        bool valid = this.ValidCheck(mainGrid);
+
+        while (valid == true)
+        {
+            this.MoveDown(mainGrid, out valid);
+        }
+    }
+
     ////위이동
     public void MoveUp(TetrisGrid mainGrid, out bool valid)
     {
@@ -451,10 +461,10 @@ public class TetrisGrid
     }
 
     ////합치기(적용)
-    public void MergeGrid(TetrisGrid mainGrid)
+    public void MergeGrid(TetrisGrid playerGrid)
     {
         //겹치는지 확인(매번 검사하기 때문에 당연히 겹치면 안된다. 디버깅용)
-        if (ValidCheck(mainGrid))
+        if (ValidCheck(playerGrid))
             Debug.Log("합치기 오류!!");
 
         //행렬 더하기
@@ -462,7 +472,7 @@ public class TetrisGrid
         {
             for (int x = 0; x < gridLength; x++)
             {
-                mainGrid.grid[y, x] += this.grid[y, x];
+                this.grid[y, x] += playerGrid.grid[y, x];
             }
         }
     }

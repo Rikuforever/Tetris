@@ -63,8 +63,26 @@ public class BoardManager : MonoBehaviour
     }
 
     //모든 블록들의 상태을 바꾸는 함수
-    public void BoardUpdate(TetrisGrid mainGrid, TetrisGrid playerGrid)
+    public void BoardUpdate(TetrisGrid mainGrid, TetrisGrid playerGrid )
     {
+        if( playerGrid == null )
+        {
+            for (int y = 0; y < gameScirpt.gridHeight; y++)
+            {
+                for (int x = 0; x < gameScirpt.gridLength; x++)
+                {
+                    int val = mainGrid.grid[y, x];
+
+                    if (_boardGrid[y, x] != val)
+                    {
+                        _boardGrid[y, x] = val;
+                        BlockUpdate(x, y, val);
+                    }
+                }
+            }
+            return;
+        }
+        
         //_boardGrid와 비교하여 변경사항 있으면 적용
         for (int y = 0; y < gameScirpt.gridHeight; y++)
         {

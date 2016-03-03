@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     private float _DholdCounter;
 
     private bool _validCheck;
+    private bool _isPhaseEnd;
+    private bool _isGameEnd;
 
     private BoardManager boardScript;
 
@@ -33,61 +35,41 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // Initializae Parameters
+        _validCheck = true;
+        _isPhaseEnd = false;
+        _isGameEnd = false;
+
         //[임시]levelGrid 아직 미구현
         levelGrid = new TetrisGrid(gridHeight, gridLength, blockType.Main, 0, 0, 0);
-        levelGrid.grid = new int[20, 10] {
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-            { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 }};
+            levelGrid.grid = new int[20, 10] {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 }};
 
         //levelGrid에서 받은 정보 적용, gridHeight 와 gridLength 설정
         mainGrid = levelGrid;
         this.gridHeight = mainGrid.gridHeight;
         this.gridLength = mainGrid.gridLength;
-        /*
-        //[임시]블록 생성 미구현이므로 수동 설정
-        playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.T, 4, 1, 0);
-        playerGrid.grid = new int[20, 10] {
-            { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 2, 2, 2, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
-        */
-
-        playerGrid = TetrisGrid.GenerateBlock(gridHeight, gridLength);
+       
+        playerGrid = TetrisGrid.GenerateBlock(this.gridHeight, this.gridLength);
 
         //보드 초기화
         boardScript.BoardSetup();
@@ -96,8 +78,15 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_isPhaseEnd == true)
+        {
+            _timeCounter = 0f;
+            EndPhase();
+            StartPhase();
+            _isPhaseEnd = false;
+            return;
+        }
 
-        ///*[임시] 회전확인용
         //일정 시간 마다
         if (_timeCounter >= gameSpeed)
         {
@@ -111,24 +100,17 @@ public class GameManager : MonoBehaviour
             if (_validCheck == false)
             {
                 //다음 페이즈로 넘어간다.
-                Debug.Log("EndPhase");
-                EndPhase();
+                _isPhaseEnd = true;
 
                 //다른 input무시
                 return;
             }
         }
-        //*/
+        //
 
         ////컨트롤 관련
 
         UpdateHoldingKey();
-        //Debug.Log(_isHolding);
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            //블록 회전
-        }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
@@ -166,9 +148,20 @@ public class GameManager : MonoBehaviour
                 _RLholdCounter += Time.deltaTime;
         }
 
+        // 회전
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             playerGrid.Turn(mainGrid);
+        }
+
+        // 박기
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            playerGrid.MoveButtom(mainGrid);
+            _isPhaseEnd = true;
+
+            //다른 input무시
+            return;
         }
 
         ////컨트롤 관련 End
@@ -184,9 +177,16 @@ public class GameManager : MonoBehaviour
         boardScript.BoardUpdate(mainGrid, playerGrid);
     }
 
+    private void StartPhase()
+    {
+        playerGrid = TetrisGrid.GenerateBlock(this.gridHeight, this.gridLength);
+        boardScript.BoardUpdate(mainGrid, playerGrid);
+    }
+
     private void EndPhase()
     {
-
+        mainGrid.MergeGrid(playerGrid);
+        boardScript.BoardUpdate(mainGrid, null);
     }
 
     private void UpdateHoldingKey()
@@ -250,5 +250,4 @@ public class GameManager : MonoBehaviour
             return;
         }
     }
-
 }
