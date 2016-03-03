@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
         mainGrid = levelGrid;
         this.gridHeight = mainGrid.gridHeight;
         this.gridLength = mainGrid.gridLength;
-
+        /*
         //[임시]블록 생성 미구현이므로 수동 설정
         playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.T, 4, 1, 0);
         playerGrid.grid = new int[20, 10] {
@@ -85,7 +85,9 @@ public class GameManager : MonoBehaviour
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+        */
 
+        playerGrid = TetrisGrid.GenerateBlock(gridHeight, gridLength);
 
         //보드 초기화
         boardScript.BoardSetup();
@@ -249,37 +251,4 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void GeneratePlayerGrid()
-    {
-        blockType randomBlockType = (blockType)Random.Range((int)1, (int)blockType.NUM_TYPES);
-
-        switch (randomBlockType)
-        {
-            //=====================================작업선===============================================
-            case blockType.I:
-                playerGrid = new TetrisGrid(gridHeight, gridLength, blockType.I, 4, 1, 0);
-                playerGrid.grid = new int[20, 10] {
-                    { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 2, 2, 2, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
-                break;
-        }
-    }
 }
