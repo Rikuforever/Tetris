@@ -408,6 +408,7 @@ public class TetrisGrid
         }
     }
 
+    ////바닥이동
     public void MoveButtom(TetrisGrid mainGrid)
     {
         bool valid = this.ValidCheck(mainGrid);
@@ -1019,13 +1020,13 @@ public class TetrisGrid
             if (this._blockTurnState == 1)
             {
                 //배열 크기 확인, 공간 부족할시 임시 이동
-                if (this._pivotX == (mainGrid.gridLength - 1) || this.grid[_pivotY - 1, _pivotX] != 0)
+                if (this._pivotX == (mainGrid.gridLength - 1) || mainGrid.grid[_pivotY - 1, _pivotX] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                 }
                 if (_validCheck == false)
                     return;
-                if (mainGrid.grid[_pivotY - 1, _pivotX] != 0)
+                if (mainGrid.grid[_pivotY - 1, _pivotX + 1] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                 }
@@ -1116,7 +1117,7 @@ public class TetrisGrid
                 }
                 if (_validCheck == false)
                     return;
-                if (this.grid[_pivotY + 1, _pivotX] != 0)
+                if (this.grid[_pivotY + 1, _pivotX - 1] != 0)
                 {
                     MoveRight(null, out _validCheck);
                 }
@@ -1199,7 +1200,7 @@ public class TetrisGrid
             if (this._blockTurnState == 1)
             {
                 //배열 크기 확인, 공간 부족할시 임시 이동
-                if (this._pivotX == (mainGrid.gridLength - 1) || this.grid[_pivotY, _pivotX + 1] != 0)
+                if (this._pivotX == (mainGrid.gridLength - 1) || mainGrid.grid[_pivotY, _pivotX + 1] != 0)
                 {
                     MoveLeft(null, out _validCheck);
                 }
