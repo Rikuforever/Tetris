@@ -14,9 +14,7 @@ public enum blockColor { Null, Sky, Blue, Orange, Green, Red, Purple, Yellow, Gr
 [Serializable]
 public class TetrisGrid
 {
-
     private blockType _blockType;
-
 
     /*//
     Int
@@ -28,9 +26,9 @@ public class TetrisGrid
     private int _pivotX;
     private int _pivotY;
 
-    /*//
+    /*
     Array int
-    *///
+    */
     public int[,] grid;
 
     /*//
@@ -315,10 +313,7 @@ public class TetrisGrid
         //mainGrid와 겹치면 복귀 또는 mainGrid가 비어있으면 그대로 반환 
         if (mainGrid != null && ValidCheck(mainGrid) == false)
         {
-            Debug.Log("GoBack!");
             this.grid = temp.grid;
-            Debug.Log(this.grid[2, 0]);
-            Debug.Log(temp.grid[2, 0]);
             this._pivotX = temp._pivotX;
             valid = false;
         }
@@ -464,10 +459,6 @@ public class TetrisGrid
     ////합치기(적용)
     public void MergeGrid(TetrisGrid playerGrid)
     {
-        //겹치는지 확인(매번 검사하기 때문에 당연히 겹치면 안된다. 디버깅용)
-        if (ValidCheck(playerGrid))
-            Debug.Log("합치기 오류!!");
-
         //행렬 더하기
         for (int y = 0; y < gridHeight; y++)
         {
@@ -481,10 +472,6 @@ public class TetrisGrid
     ////회전
     public void Turn(TetrisGrid mainGrid)
     {
-        Debug.Log("PivotX: " + this._pivotX);
-        Debug.Log("PivotY: " + this._pivotY);
-        Debug.Log("BlockType: " + this._blockType);
-
         _validCheck = true;
         TetrisGrid temp = new TetrisGrid(this);
 
@@ -1482,5 +1469,43 @@ public class TetrisGrid
 
         this.grid[afterY, afterX] = this.grid[beforeY, beforeX];
         this.grid[beforeY, beforeX] = 0;
+    }
+    
+    //채워진 줄 지우고 아래로 몰아내리기, 제거된 줄의 갯수 반환
+    public int ShiftLine()
+    {
+        int count = 0;
+        int marker = gridHeight-1;
+        
+        for(int i = gridHeight-1; i >= 0; i--)
+        {
+            if (!IsFull(i))
+            {
+                for (int j = 0; j < gridLength; j++)
+                {
+                    grid[marker, j] = grid[i, j];
+                }
+                marker -= 1;
+            } else
+            {
+                for (int j = 0; j < gridLength; j++)
+                {
+                    grid[i, j] = 0;
+                }
+                count++;
+            }
+        }
+        return count;
+    }
+
+    //해당 줄 꽉 차있는가?
+    public bool IsFull(int colNum)
+    {
+        for(int j=0; j<gridLength; j++)
+        {
+            if (grid[colNum,j] == 0)
+                return false;
+        }
+        return true;
     }
 }

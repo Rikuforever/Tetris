@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -6,6 +7,9 @@ public class GameManager : MonoBehaviour
 
     public int gridHeight;
     public int gridLength;
+    public int score;
+    public int perLineScore;
+    public int level;
 
     public float gameSpeed;
     public float holdTime;
@@ -23,6 +27,8 @@ public class GameManager : MonoBehaviour
     private TetrisGrid mainGrid;
     private TetrisGrid playerGrid;
 
+    public Text textUI;
+
     private enum holdKey { Null, Left, Right }
     private holdKey _isHolding;
 
@@ -35,7 +41,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Initializae Parameters
+        // Initialize UI
+        textUI.text = "Score : 0";
+
+        // Initialize Parameters
         _validCheck = true;
         _isPhaseEnd = false;
         _isGameEnd = false;
@@ -52,17 +61,17 @@ public class GameManager : MonoBehaviour
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 },
-                { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 }};
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
         //levelGrid에서 받은 정보 적용, gridHeight 와 gridLength 설정
         mainGrid = levelGrid;
@@ -78,6 +87,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        // 페이즈 마무리 처리
         if (_isPhaseEnd == true)
         {
             _timeCounter = 0f;
@@ -186,6 +197,8 @@ public class GameManager : MonoBehaviour
     private void EndPhase()
     {
         mainGrid.MergeGrid(playerGrid);
+        score += mainGrid.ShiftLine() * perLineScore;
+        textUI.text = "Score : " + score.ToString();
         boardScript.BoardUpdate(mainGrid, null);
     }
 
