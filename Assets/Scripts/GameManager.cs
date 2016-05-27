@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private float _DholdCounter;
 
     private bool _validCheck;
+    private bool _isPhaseStart;
     private bool _isPhaseEnd;
     private bool _isGameEnd;
 
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
 
         // Initialize Parameters
         _validCheck = true;
+        _isPhaseStart = false;
         _isPhaseEnd = false;
         _isGameEnd = false;
 
@@ -87,14 +89,39 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 게임 오버 처리
+        if(_isGameEnd == true)
+        {
+            textUI.text = "GAME OVER";
+            return;
+        }
+
+        // 페이즈 시작 처리
+        if (_isPhaseStart == true)
+        {
+            playerGrid = TetrisGrid.GenerateBlock(this.gridHeight, this.gridLength);
+            //게임오버 확인
+            if (!playerGrid.ValidCheck(mainGrid))
+            {
+                _isGameEnd = true;
+                return;
+            }
+            boardScript.BoardUpdate(mainGrid, playerGrid);
+            _isPhaseStart = false;
+            return;
+        }
 
         // 페이즈 마무리 처리
         if (_isPhaseEnd == true)
         {
             _timeCounter = 0f;
-            EndPhase();
-            StartPhase();
+            //합체
+            mainGrid.MergeGrid(playerGrid);
+            score += mainGrid.ShiftLine() * perLineScore;
+            textUI.text = "Score : " + score.ToString();
+            boardScript.BoardUpdate(mainGrid, null);
             _isPhaseEnd = false;
+            _isPhaseStart = true;
             return;
         }
 
@@ -188,19 +215,6 @@ public class GameManager : MonoBehaviour
         boardScript.BoardUpdate(mainGrid, playerGrid);
     }
 
-    private void StartPhase()
-    {
-        playerGrid = TetrisGrid.GenerateBlock(this.gridHeight, this.gridLength);
-        boardScript.BoardUpdate(mainGrid, playerGrid);
-    }
-
-    private void EndPhase()
-    {
-        mainGrid.MergeGrid(playerGrid);
-        score += mainGrid.ShiftLine() * perLineScore;
-        textUI.text = "Score : " + score.ToString();
-        boardScript.BoardUpdate(mainGrid, null);
-    }
 
     private void UpdateHoldingKey()
     {
